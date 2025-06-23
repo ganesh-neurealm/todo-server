@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { Low } = require('lowdb');
-const { JSONFile } = require('lowdb/node');  // <- Import from 'lowdb/node' for JSONFile adapter
+const { JSONFile } = require('lowdb/node');
 const path = require('path');
 
 const app = express();
@@ -10,19 +10,22 @@ const PORT = process.env.PORT || 8000;
 app.use(cors());
 app.use(express.json());
 
+// File path for db.json
 const file = path.join(__dirname, 'db.json');
 const adapter = new JSONFile(file);
 const db = new Low(adapter);
 
+// Initialize DB with default data
 async function initDB() {
   await db.read();
-  db.data = db.data || { todos: [] };
-  await db.write();
+  if (!db.data) {
+    db.data = { todos: [] }; // ✅ Set default data structure
+    await db.write();
+  }
 }
 initDB();
 
-// Your routes here...
-
+// Routes
 app.get('/todos', async (req, res) => {
   await db.read();
   res.json(db.data.todos);
@@ -43,7 +46,6 @@ app.post('/todos', async (req, res) => {
 app.put('/todos/:id', async (req, res) => {
   const id = parseInt(req.params.id);
   const { title } = req.body;
-  if (!title) return res.status(400).json({ message: 'Title is required' });
 
   await db.read();
   const todo = db.data.todos.find(t => t.id === id);
@@ -57,15 +59,14 @@ app.put('/todos/:id', async (req, res) => {
 
 app.delete('/todos/:id', async (req, res) => {
   const id = parseInt(req.params.id);
-
   await db.read();
-  const lenBefore = db.data.todos.length;
+  const before = db.data.todos.length;
   db.data.todos = db.data.todos.filter(t => t.id !== id);
-
-  if (lenBefore === db.data.todos.length) return res.status(404).json({ message: 'Todo not found' });
+  if (before === db.data.todos.length) {
+    return res.status(404).json({ message: 'Todo not found' });
+  }
 
   await db.write();
-
   res.json({ message: 'Deleted' });
 });
 
