@@ -22,7 +22,7 @@ router.put('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
   const id = parseInt(req.params.id);
   todos = todos.filter(todo => todo.id !== id);
-  res.json({ message: 'Deleted' });
+  res.json({ message: 'Deleted', todos });
 });
 
 export default router;
