@@ -1,40 +1,27 @@
 import express from 'express';
-import fs from 'fs/promises';
-import path from 'path';
 
 const router = express.Router();
-const dbPath = path.resolve('db.json');
+let todos = []; 
 
-// Helper to read/write DB
-const readDB = async () => JSON.parse(await fs.readFile(dbPath, 'utf-8'));
-const writeDB = async (data) => await fs.writeFile(dbPath, JSON.stringify(data, null, 2));
-
-router.get('/', async (req, res) => {
-  const db = await readDB();
-  res.json(db.todos);
+router.get('/', (req, res) => {
+  res.json(todos);
 });
 
-router.post('/', async (req, res) => {
-  const db = await readDB();
+router.post('/', (req, res) => {
   const newTodo = { id: Date.now(), ...req.body };
-  db.todos.push(newTodo);
-  await writeDB(db);
+  todos.push(newTodo);
   res.status(201).json(newTodo);
 });
 
-router.put('/:id', async (req, res) => {
-  const db = await readDB();
+router.put('/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  db.todos = db.todos.map(t => t.id === id ? { ...t, ...req.body } : t);
-  await writeDB(db);
+  todos = todos.map(todo => (todo.id === id ? { ...todo, ...req.body } : todo));
   res.json({ message: 'Updated' });
 });
 
-router.delete('/:id', async (req, res) => {
-  const db = await readDB();
+router.delete('/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  db.todos = db.todos.filter(t => t.id !== id);
-  await writeDB(db);
+  todos = todos.filter(todo => todo.id !== id);
   res.json({ message: 'Deleted' });
 });
 
