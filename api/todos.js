@@ -30,7 +30,7 @@ const generatePatientData = () => {
       updatedDate: new Date().toISOString(),
     });
   }
-  return data;
+  return data.sort((a, b) => a.x - b.x);
 };
 
 let patients = generatePatientData();
