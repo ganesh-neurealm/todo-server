@@ -9,18 +9,19 @@ const generatePatientData = () => {
   const startDate = new Date("2014-01-01");
   const totalDays = 365 * 11; // ~11 years
 
+const generatePatientData = () => {
+  const data = [];
   for (let i = 0; i < 2000; i++) {
-    // Cluster around specific months
-    const clusterYear = 2014 + Math.floor(Math.random() * 11); // 2014 - 2024
-    const clusterMonth = Math.floor(Math.random() * 12); // 0-11
-    const clusterBase = new Date(clusterYear, clusterMonth, 1);
-    const jitterDays = Math.floor(Math.random() * 28); // stay within the month
-    clusterBase.setDate(clusterBase.getDate() + jitterDays);
+    const clusterYear = 2014 + Math.floor(Math.random() * 11);
+    const clusterMonth = Math.floor(Math.random() * 12);
+    const baseDate = new Date(clusterYear, clusterMonth, 1);
+    const jitterDays = Math.floor(Math.random() * 28);
+    baseDate.setDate(baseDate.getDate() + jitterDays);
 
-    const x = clusterBase.toISOString().split("T")[0]; // "YYYY-MM-DD"
+    const date = baseDate.toISOString();
+    const x = date;
 
     let y = Math.random() * 80 - 40;
-
     if (Math.random() < 0.05) {
       y = (Math.random() < 0.5 ? 1 : -1) * (40 + Math.random() * 20);
     } else if (Math.random() < 0.1) {
@@ -33,6 +34,7 @@ const generatePatientData = () => {
     data.push({
       id: Date.now() + i,
       x,
+      date,
       y,
       dosage,
       valueCheck,
@@ -47,6 +49,7 @@ const generatePatientData = () => {
 
   return data.sort((a, b) => new Date(a.x).getTime() - new Date(b.x).getTime());
 };
+
 
 
 let patients = generatePatientData();
