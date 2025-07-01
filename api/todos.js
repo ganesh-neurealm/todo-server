@@ -6,20 +6,17 @@ let todos = [];
 
 const generatePatientData = () => {
   const data = [];
-  const startDate = new Date("2014-01-01");
-  const totalDays = 365 * 11; // ~11 years
 
-const generatePatientData = () => {
-  const data = [];
   for (let i = 0; i < 2000; i++) {
-    const clusterYear = 2014 + Math.floor(Math.random() * 11);
-    const clusterMonth = Math.floor(Math.random() * 12);
+    // Generate clustered date
+    const clusterYear = 2014 + Math.floor(Math.random() * 11); // 2014–2024
+    const clusterMonth = Math.floor(Math.random() * 12); // Jan–Dec
     const baseDate = new Date(clusterYear, clusterMonth, 1);
     const jitterDays = Math.floor(Math.random() * 28);
     baseDate.setDate(baseDate.getDate() + jitterDays);
 
     const date = baseDate.toISOString();
-    const x = date;
+    const x = Math.random() * 1000; 
 
     let y = Math.random() * 80 - 40;
     if (Math.random() < 0.05) {
@@ -33,9 +30,9 @@ const generatePatientData = () => {
 
     data.push({
       id: Date.now() + i,
-      x,
-      date,
-      y,
+      x, 
+      y,  
+      date, 
       dosage,
       valueCheck,
       name: `Patient ${i}`,
@@ -47,8 +44,9 @@ const generatePatientData = () => {
     });
   }
 
-  return data.sort((a, b) => new Date(a.x).getTime() - new Date(b.x).getTime());
+  return data.sort((a, b) => a.x - b.x);
 };
+
 
 
 
