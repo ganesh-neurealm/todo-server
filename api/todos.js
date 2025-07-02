@@ -6,17 +6,14 @@ let todos = [];
 
 const generatePatientData = () => {
   const data = [];
+  const baseDate = new Date(2014, 0, 1); // Start from Jan 1, 2014
 
   for (let i = 0; i < 2000; i++) {
-    // Generate clustered date
-    const clusterYear = 2014 + Math.floor(Math.random() * 11); // 2014–2024
-    const clusterMonth = Math.floor(Math.random() * 12); // Jan–Dec
-    const baseDate = new Date(clusterYear, clusterMonth, 1);
-    const jitterDays = Math.floor(Math.random() * 28);
-    baseDate.setDate(baseDate.getDate() + jitterDays);
+    const date = new Date(baseDate);
+    date.setMonth(baseDate.getMonth() + i * 3); // 3-month gap between each
 
-    const date = baseDate.toISOString();
-    const x = Math.random() * 1000; 
+    const isoDate = date.toISOString();
+    const x = i; // Now x is strictly increasing and numeric
 
     let y = Math.random() * 80 - 40;
     if (Math.random() < 0.05) {
@@ -30,9 +27,9 @@ const generatePatientData = () => {
 
     data.push({
       id: Date.now() + i,
-      x, 
-      y,  
-      date, 
+      x, // strictly increasing
+      y,
+      date: isoDate,
       dosage,
       valueCheck,
       name: `Patient ${i}`,
@@ -44,8 +41,9 @@ const generatePatientData = () => {
     });
   }
 
-  return data.sort((a, b) => a.x - b.x);
+  return data;
 };
+
 
 
 
