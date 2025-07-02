@@ -6,16 +6,16 @@ let todos = [];
 
 const generatePatientData = () => {
   const data = [];
-  const startDate = new Date(2014, 0, 1); // Jan 1, 2014
   const today = new Date();
-  let currentDate = new Date(startDate);
+  let currentDate = new Date(2014, 0, 1); // Start: Jan 1, 2014
   let x = 0;
 
-  while (data.length < 2000 && currentDate <= today) {
-    const date = new Date(currentDate); 
-    const isoDate = date.toISOString();
+  while (data.length < 5000) {
+    if (currentDate > today) break;
 
-    let y = Math.random() * 80 - 40;
+    const yBase = Math.random() * 80 - 40;
+    let y = yBase;
+
     if (Math.random() < 0.05) {
       y = (Math.random() < 0.5 ? 1 : -1) * (40 + Math.random() * 20);
     } else if (Math.random() < 0.1) {
@@ -27,9 +27,9 @@ const generatePatientData = () => {
 
     data.push({
       id: Date.now() + data.length,
-      x: x++,
+      x: x++, // numeric and incremental
       y,
-      date: isoDate,
+      date: currentDate.toISOString(),
       dosage,
       valueCheck,
       name: `Patient ${data.length}`,
@@ -40,12 +40,12 @@ const generatePatientData = () => {
       updatedDate: new Date().toISOString(),
     });
 
-    const monthIncrement = Math.random() < 0.5 ? 2 : 3; // randomly 2 or 3 months
-    currentDate.setMonth(currentDate.getMonth() + monthIncrement);
+    currentDate.setMonth(currentDate.getMonth() + 1);
   }
 
   return data;
 };
+
 
 
 
