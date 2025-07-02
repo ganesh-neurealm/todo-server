@@ -4,47 +4,59 @@ const router = express.Router();
 
 let todos = []; 
 
+
+
 const generatePatientData = () => {
   const data = [];
   const today = new Date();
-  let currentDate = new Date(2014, 0, 1); // Start: Jan 1, 2014
+  const startDate = new Date(2014, 0, 1); 
+  let currentDate = new Date(startDate);
   let x = 0;
 
-  while (data.length < 10000) {
-    if (currentDate > today) break;
+  while (currentDate <= today && data.length < 40000) {
+    const patientsThisMonth = 3 + Math.floor(Math.random() * 5); 
 
-    const yBase = Math.random() * 80 - 40;
-    let y = yBase;
+    for (let i = 0; i < patientsThisMonth; i++) {
+      if (data.length >= 40000) break;
 
-    if (Math.random() < 0.05) {
-      y = (Math.random() < 0.5 ? 1 : -1) * (40 + Math.random() * 20);
-    } else if (Math.random() < 0.1) {
-      y = (Math.random() < 0.5 ? 1 : -1) * (35 + Math.random() * 10);
+      const dayOffset = Math.floor(Math.random() * 28);
+      const patientDate = new Date(currentDate);
+      patientDate.setDate(patientDate.getDate() + dayOffset);
+      if (patientDate > today) break;
+
+      const yBase = Math.random() * 80 - 40;
+      let y = yBase;
+      if (Math.random() < 0.05) {
+        y = (Math.random() < 0.5 ? 1 : -1) * (40 + Math.random() * 20);
+      } else if (Math.random() < 0.1) {
+        y = (Math.random() < 0.5 ? 1 : -1) * (35 + Math.random() * 10);
+      }
+
+      const dosage = 5 + Math.floor(Math.random() * 495);
+      const valueCheck = Math.floor(Math.random() * 100);
+
+      data.push({
+        id: Date.now() + data.length,
+        x: x++,
+        y,
+        date: patientDate.toISOString(),
+        dosage,
+        valueCheck,
+        name: `Patient ${data.length}`,
+        frequency: ["Once a day", "Twice a day", "Three times a day", "As needed"][Math.floor(Math.random() * 4)],
+        isSquare: Math.random() < 0.1,
+        comment: "",
+        createdDate: new Date().toISOString(),
+        updatedDate: new Date().toISOString(),
+      });
     }
 
-    const dosage = 5 + Math.floor(Math.random() * 495);
-    const valueCheck = Math.floor(Math.random() * 100);
-
-    data.push({
-      id: Date.now() + data.length,
-      x: x++, // numeric and incremental
-      y,
-      date: currentDate.toISOString(),
-      dosage,
-      valueCheck,
-      name: `Patient ${data.length}`,
-      frequency: ["Once a day", "Twice a day", "Three times a day", "As needed"][Math.floor(Math.random() * 4)],
-      isSquare: Math.random() < 0.1,
-      comment: "",
-      createdDate: new Date().toISOString(),
-      updatedDate: new Date().toISOString(),
-    });
-
-    currentDate.setMonth(currentDate.getMonth() + 1);
+    currentDate.setMonth(currentDate.getMonth() + 1); // Move to next month
   }
 
   return data;
 };
+
 
 
 
