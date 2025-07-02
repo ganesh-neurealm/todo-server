@@ -10,7 +10,7 @@ const generatePatientData = () => {
   let currentDate = new Date(2014, 0, 1); // Start: Jan 1, 2014
   let x = 0;
 
-  while (data.length < 5000) {
+  while (data.length < 10000) {
     if (currentDate > today) break;
 
     const yBase = Math.random() * 80 - 40;
