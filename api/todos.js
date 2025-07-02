@@ -6,14 +6,14 @@ let todos = [];
 
 const generatePatientData = () => {
   const data = [];
-  const baseDate = new Date(2014, 0, 1); // Start from Jan 1, 2014
+  const startDate = new Date(2014, 0, 1); // Jan 1, 2014
+  const today = new Date();
+  let currentDate = new Date(startDate);
+  let x = 0;
 
-  for (let i = 0; i < 2000; i++) {
-    const date = new Date(baseDate);
-    date.setMonth(baseDate.getMonth() + i * 3); // 3-month gap between each
-
+  while (data.length < 2000 && currentDate <= today) {
+    const date = new Date(currentDate); 
     const isoDate = date.toISOString();
-    const x = i; // Now x is strictly increasing and numeric
 
     let y = Math.random() * 80 - 40;
     if (Math.random() < 0.05) {
@@ -26,19 +26,22 @@ const generatePatientData = () => {
     const valueCheck = Math.floor(Math.random() * 100);
 
     data.push({
-      id: Date.now() + i,
-      x, // strictly increasing
+      id: Date.now() + data.length,
+      x: x++,
       y,
       date: isoDate,
       dosage,
       valueCheck,
-      name: `Patient ${i}`,
+      name: `Patient ${data.length}`,
       frequency: ["Once a day", "Twice a day", "Three times a day", "As needed"][Math.floor(Math.random() * 4)],
       isSquare: Math.random() < 0.1,
       comment: "",
       createdDate: new Date().toISOString(),
       updatedDate: new Date().toISOString(),
     });
+
+    const monthIncrement = Math.random() < 0.5 ? 2 : 3; // randomly 2 or 3 months
+    currentDate.setMonth(currentDate.getMonth() + monthIncrement);
   }
 
   return data;
