@@ -139,4 +139,62 @@ router.put("/patients/:id", (req, res) => {
   }
 });
 
+router.get("/chart", (req, res) => {
+  const trace1 = {
+    x: [1, 2, 3, 4, 5],
+    y: [2, 5, 1, 8, 6],
+    mode: "lines+markers+text",
+    type: "scatter",
+    name: "Patient A",
+    text: ["a", "b", "c", "d", "e"],
+    marker: { color: "red", size: 8 },
+    line: { color: "red", width: 2 },
+  };
+
+  const trace2 = {
+    x: [1, 2, 3, 4, 5],
+    y: [3, 4, 2, 7, 5],
+    mode: "lines+markers",
+    type: "scatter",
+    name: "Patient B",
+    marker: { color: "black", size: 8 },
+    line: { color: "black", width: 2 },
+  };
+
+  const layout = {
+    title: "Server-Side Scatter Line Chart",
+    xaxis: { title: "Time" },
+    yaxis: { title: "Value" },
+
+  };
+
+  const plotlyData = JSON.stringify([trace1, trace2]);
+  const plotlyLayout = JSON.stringify(layout);
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>MPI Charts</title>
+      <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+      <style>
+        body { margin: 40px; font-family: Arial; }
+      </style>
+    </head>
+    <body>
+      <h2>Plot Generated from Node.js Backend</h2>
+      <div id="chart" style="width: 100%; height: 600px;"></div>
+      <script>
+        const data = ${plotlyData};
+        const layout = ${plotlyLayout};
+        Plotly.newPlot('chart', data, layout);
+      </script>
+    </body>
+    </html>
+  `;
+
+  res.setHeader("Content-Type", "text/html");
+  res.send(html);
+});
+
 export default router;
